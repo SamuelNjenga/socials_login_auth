@@ -1,9 +1,14 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GithubStrategy = require("passport-github2").Strategy;
+
 const passport = require("passport");
 require("dotenv").config();
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
 passport.use(
   new GoogleStrategy(
@@ -25,3 +30,16 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
+
+passport.use(
+  new GithubStrategy(
+    {
+      clientID: GITHUB_CLIENT_ID,
+      clientSecret: GITHUB_CLIENT_SECRET,
+      callbackURL: "/auth/github/callback",
+    },
+    function (accessToken, refreshToken, profile, done) {
+      done(null, profile);
+    }
+  )
+);
