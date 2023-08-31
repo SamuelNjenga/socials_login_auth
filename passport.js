@@ -23,14 +23,6 @@ passport.use(
   )
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
 passport.use(
   new GithubStrategy(
     {
@@ -39,7 +31,15 @@ passport.use(
       callbackURL: "/auth/github/callback",
     },
     function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+      done(null, profile._json);
     }
   )
 );
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
